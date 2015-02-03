@@ -10,9 +10,8 @@ import re
 import syllabify_base
 #Write errmsg to stderr and exit
 
-def die(errmsg) :
+def die(errmsg):
 	exit(sys.stderr.write("Error:"+errmsg+"\n"))
-
 
 # this dictionary encodes the sonority level of each phoneme
 son = { 'AA': 4, 'AE' : 4, 'AH' : 4, 'AO' : 4, 'AW' : 4, 'AY' : 4,
@@ -22,11 +21,46 @@ son = { 'AA': 4, 'AE' : 4, 'AH' : 4, 'AO' : 4, 'AW' : 4, 'AY' : 4,
              'P': 0, 'R': 2, 'S': 0, 'SH': 0, 'T': 0, 'TH': 0, 'UH': 4,
              'UW': 4, 'V': 0, 'W': 3, 'Y': 3, 'Z': 0, 'ZH': 0}
 
+freq = { 'CCV': 0, 'CCVC': 0,'CV': 0, 'CVC': 0, 'CVCC': 0, 'CVCCC': 0, 'V': 0, 
+'VC': 0,  'VCC': 0} 
 #A pseudo-enum for states
 coda = 0
 onset = 1
 initial_onset = 10
 
+#updates the freq dictionary based on what type of syllables
+#the pronounciation of the word contains
+def update_frequency(line):
+	lst = re.split(r'\s',line)
+	c = 'C'
+	v = 'V'
+	syll_type=''
+	for ph in lst:
+		#+
+		if ph == '+' and syll_type in freq:
+				freq[syll_type] += 1
+				syll_type = ''
+		#ignore other non-phonemes
+		elif not ph in son:
+			continue
+		#V
+		elif son[ph] == 4:
+			syll_type += v
+		#C
+		else:
+			syll_type += c
+
+	#update last syllable, if any		
+	if syll_type in freq:
+		freq[syll_type] += 1
+
+def show_frequency():
+	count = 0
+	for key,val in freq.items():
+		count+=val
+
+	for key,val in freq.items():
+		print "Frequency of %s :\t %.2f" % (key, 100 * val/float(count))
 ###MAIN###
 
 #Check input length
@@ -75,8 +109,12 @@ try:
 			output_lst.append(lst[-1])
 			output_lst=output_lst[::-1]
 			syllabified_line = ' '.join(output_lst)
+			#part2
+			# pdate
 			#print output
 			print syllabified_line
+			update_frequency(syllabified_line)
+		show_frequency()
 except IOError:
 	die("unable to open file "+sys.argv[1])
 
