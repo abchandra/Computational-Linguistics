@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+
+# Syllabify.py (python 2.7.6)
+# Author: Abhishek Chandra
+# email: abhishek.chandra@yale.edu
+# Desc: HW1 for LING 227 at Yale
+
 import sys
 import re
 import syllabify_base
@@ -39,7 +45,7 @@ try:
 			#initialize output list
 			output_lst = []
 			for ph in lst:
-				#ignore non-phenomes
+				#ignore non-phonemes
 				if not ph in son:
 					continue
 				#always add S to current onset
@@ -63,13 +69,14 @@ try:
 						mode = coda
 					else:
 						lastonset = son[ph]
+				#Append current phoneme to output list
 				output_lst.append(ph)
+			#create output string from list
 			output_lst.append(lst[-1])
 			output_lst=output_lst[::-1]
 			syllabified_line = ' '.join(output_lst)
+			#print output
 			print syllabified_line
-			#implement principles
-			#write to file
 except IOError:
 	die("unable to open file "+sys.argv[1])
 
