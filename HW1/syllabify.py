@@ -58,7 +58,8 @@ def show_frequency():
 	count = 0
 	for key,val in freq.items():
 		count+=val
-
+	if not count:
+		count = 1
 	for key,val in freq.items():
 		print "Frequency of %s :\t %.2f" % (key, 100 * val/float(count))
 ###MAIN###
