@@ -54,10 +54,12 @@ def update_frequency(line):
 	if syll_type in freq:
 		freq[syll_type] += 1
 
+# pretty print the relative frequencies stored in freq
 def show_frequency():
 	count = 0
 	for key,val in freq.items():
 		count+=val
+	#handle divide by zero errors
 	if not count:
 		count = 1
 	for key,val in freq.items():
@@ -110,9 +112,6 @@ try:
 			output_lst.append(lst[-1])
 			output_lst=output_lst[::-1]
 			syllabified_line = ' '.join(output_lst)
-			#part2
-			# pdate
-			#print output
 			print syllabified_line
 			update_frequency(syllabified_line)
 		show_frequency()

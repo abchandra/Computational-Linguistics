@@ -3,7 +3,30 @@
 # Syllabify.py (python 2.7.6)
 # Author: Abhishek Chandra
 # email: abhishek.chandra@yale.edu
-# Desc: HW1 for LING 227 at Yale
+# Desc: HW1 Extra Credit for LING 227 at Yale
+
+
+# Extra Credit 'improvements'
+
+# Note, except for heuristic 1, the others do not always hold. They hold more
+# more often than not, at least for our test data.
+
+# Heuristic 1:
+# for a CCC onset, the first C must be [S], the next in [P,T,K] and the last 
+# in [W,J,R,L]. Moreover, if the third C is W, the the first two CC must be [S,K]
+# Source:
+# http://clas.mq.edu.au/speech/phonetics/phonology/syllable/syll_phonotactic.html
+
+# Heuristic 2:
+# for certain nuclei (IH,AH,EH etc) that are followed by an [S], put [S] in
+# 	the coda of the same syllable
+
+# Heuristic 3:
+# for certain nuclei (same as above) that are followed by [K,T,CH] followed by
+# [S], put them all in the coda of the same syllable.
+
+# Heuristic 4:
+# 	for the "-ly" suffix, [LIY], put them in their own syllable 
 
 import sys
 import re
@@ -54,10 +77,12 @@ def update_frequency(line):
 	if syll_type in freq:
 		freq[syll_type] += 1
 
+# pretty print the relative frequencies stored in freq
 def show_frequency():
 	count = 0
 	for key,val in freq.items():
 		count+=val
+	#handle divide by zero errors
 	if not count:
 		count = 1
 	for key,val in freq.items():
@@ -71,7 +96,6 @@ def check_onset_size(onset_size,output_lst):
 		return False
 	if onset_size != 2:
 		die("possible bug in onset size heuristic")
-
 	if output_lst[-1] in ['P','T','K'] and output_lst[-2] in ['J','R','L']:
 		return True
 	if output_lst[-1]=='K' and output_lst[-2]=='W':
@@ -103,6 +127,7 @@ try:
 					continue
 				#always try to add S to current onset
 				if ph == 'S' and mode == onset:
+					#Heuristic 1
 					if check_onset_size(onset_size,output_lst):
 						last_onset = son[ph]
 						onset_size +=1
@@ -112,10 +137,23 @@ try:
 						mode = coda
 				#nuclei 
 				elif son[ph] == 4:
-					if (ph == 'AH' or ph =='IH') and len(output_lst)>=1 and output_lst[-1] == 'S':
-						if len(output_lst)>=3 and output_lst[-2] != '+':
-							output_lst[-1] ='+'
-							output_lst.append('S')
+					# Heuristic 2
+					if (ph == 'AH' or ph =='IH' or ph=='EH' or ph=='AE'): 
+						if (len(output_lst)>=3 and output_lst[-1] == 'S') \
+						and output_lst[-2] != '+' \
+						and son[output_lst[-2]]!=4:
+								output_lst[-1] ='+'
+								output_lst.append('S')
+								output_lst.append(ph)
+								last_onset = initial_onset
+								onset_size = 0
+								mode = onset
+								continue
+						# Heuristic 3
+						elif len(output_lst)>=4 and output_lst[-1] in ['K','T','CH'] \
+						and output_lst[-2] =='+' and output_lst[-3]=='S':
+							output_lst[-3] ='+'
+							output_lst[-2] = 'S'
 							output_lst.append(ph)
 							last_onset = initial_onset
 							onset_size = 0
@@ -133,8 +171,15 @@ try:
 
 				#onset
 				elif mode == onset:
-					#onset maximization 
-					if last_onset - son[ph] < 2 or onset_size >= 2:
+					# Heuristic 4: caveat to onset maximization for "LIY" ending words 
+					if ph=='L' and (len(output_lst)==1 and output_lst[-1]=='IY'):
+						output_lst.append(ph)
+						output_lst.append('+')
+						last_onset = initial_onset
+						mode = coda
+						continue
+					#onset maximization						
+					if (last_onset - son[ph] < 2 or onset_size >= 2):
 						output_lst.append('+')
 						last_onset = initial_onset
 						mode = coda
@@ -154,9 +199,4 @@ except IOError:
 	die("unable to open file "+sys.argv[1])
 
 
-# More heuristics
-
-# In English the maximum number of consonants that can make up the syllabic onset 
-# at the beginning of an isolated word is three. The first can only be /s/, the 
-# second has to be /p, t, k/, and the third has to be an approximant /w, j, r, l/
-# http://clas.mq.edu.au/speech/phonetics/phonology/syllable/syll_phonotactic.html
+	
