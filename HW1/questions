@@ -1,0 +1,129 @@
+Abhishek Chandra
+HW 1 questions
+
+Part 1
+
+Q1)	error type 1:
+	Misparsed:DIHS+RAHPTS as DIH+SRAHPTS
+	Misparsed:MIHS+FAYL as MIH+SFAYL
+	
+	error type 2:
+	Misparsed:POWST+WAOR as POW+STWAOR
+	Misparsed:MAOR+OW+VER as MAO+ROW+VER
+
+Q2)	The errors in type 1 are because our principal of putting [S] with the
+	following syllable does not work. Here, the principle itself
+	does not apply (or at least, needs additional conditions).
+
+	The errors in type 2 are using the maximal onset principle, but here
+	the pronounciation is influenced by the fact that postwar and moreover
+	are compound words, and are effectively pronounced as post + war and
+	more + over. So, the maximal onset principle isn't the best guiding
+	principle for deciding where the onset should begin.
+
+
+Q3)	For errors of type 1, we can add other heuristics/conditions that work
+	in tandem with the [S] principal. Eg) with certain nuclei (like AH and
+	IH) the [S] should be in the coda of that syllable.
+
+	For errors of type 2, we could use a dictionary of english words to
+	try to determine when not to use onset maximization. We can then split
+	the compound word and syllabify them separately, and then connect the
+	syllabified parts by a +.
+
+Q4)	Extra Credit :
+	for test.txt:
+	syllable level accuracy is	0.970909
+	word level accuracy is		0.963964
+
+	Extra Credit 'improvements':
+
+	Note, except for heuristic 1, the others do not always hold. They hold 
+	more often than not, at least for our test data.
+
+	Heuristic 1:
+	for a CCC onset, the first C must be [S], the next in [P,T,K] and the last 
+	in [W,J,R,L]. Moreover, if the third C is W, the the first two CC must 
+	be [S,K]. Source:
+	http://clas.mq.edu.au/speech/phonetics/phonology/syllable/syll_phonotactic.html
+
+	Heuristic 2:
+	for certain nuclei (IH,AH,EH etc) that are followed by an [S], put [S] in
+	the coda of the same syllable
+
+	Heuristic 3:
+	for certain nuclei (same as above) that are followed by [K,T,CH] followed by [S], put them all in the coda of the same syllable.
+
+	Heuristic 4:
+	for the "-ly" suffix, [LIY], put them in their own syllable 
+	
+Part 2
+Q1)	The first syllable types attempted are (relative frequencies for
+	month 13):
+		Charlotte	Georgia
+	- V	47.96		26.67 
+	- CVC	47.96		20.00
+	- CV	4.08		23.33
+	- CCVC	0.00		30.00
+	
+	For syllables attempted later, we compare the 13 and 21 month files 
+	(20 for Georgia) against the last files. The syllable types with highest 
+	percentage increase are noted below.
+	
+	Charlotte:
+		month 48	month 21 
+	- CCVC	30.66 		1.94	
+	- VC	9.46		1.46
+	- CCV	2.58		0.73
+	- CVCC	7.10		2.19
+	- CVCCC 0.43		0
+	
+	Georgia
+		month 43	month 20
+	- VC	8.04		2.74
+	- VCC	2.50		1.37
+	- CVCCC 0.54		0
+	
+
+Q2)		Charlotte	Georgia
+	- V	48.45		25.00 
+	- CVC	1.03		3.12
+	- CV	50.52		71.88
+
+	Charlotte(actual):
+		month 48	month 21 
+	- CCVC	1.54 		0.65	
+	- VC	6.59		3.23
+	- CCV	2.42		0.65
+	- CVCCC 0.66		0
+	- VCC 	0.88		0
+
+	Georgia (actual):
+		month 43	month 20
+	- VC	9.73		2.08
+	- VCC	0.34		0
+	- CVCCC 0.34		0
+	- CCV 	1.02		0
+	- CVCC 	3.41		0
+	- CVC   28.33		6.25
+
+Q3)	The syllables CV and CVC are highly over-represented for both 
+	Charlotte and Georgia. VC syllables are somewhat over-represented
+	as well.  The syllables CVCC, CVCCC, VCC, CCV are all 
+	underrepresented.  
+
+Q4/5) 	As the background suggests, children acquire more marked/complex
+	syllables later. The easiest ones,V and CV are acquired earliest,
+	followed by the more marked VC and CVC. The most marked ones,
+	such as CVCC are the latest to start being pronounced.
+	
+	CVCCC => CVC => CV (right most is least marked, and more represented)
+	
+	Thus, there is a strongly positive relation between the Implicational
+	universals and the syllables which children start pronouncing first.
+	
+	However, CCV is something of an exception. CCV, which is not as 
+	marked, is also underrepresented (comparable to CVCCC, and more
+	underrepresented than CVCC). Perhaps this suggests that consonant 
+	clusters in general are harder for children to pronounce, especially
+	in the onset. 
