@@ -1,0 +1,164 @@
+Abhishek Chandra
+Questions for HW2
+LING 227
+
+
+Q1: min_edit (using only Levenshtein distance algorithm):
+
+    		 b   r   i		e		f 
+__|________________________    		
+  |  0   1   2   3   4   5
+d |  1   2   3   4   5   6
+r |  2   3   2   3   4   5
+i |  3   4   3   2   3   4
+v |  4   5   4   3   4   5
+e |  5   6   5   4   3   4
+		
+				 m		a		m		m		a		l
+__|____________________________
+  |  0   1   2   3   4   5   6
+a |  1   2   1   2   3   4   5
+n |  2   3   2   3   4   5   6
+i |  3   4   3   4   5   6   7
+m	|  4   3   4   3   4   5   6
+a |  5   4   3   4   5   4   5
+l |  6   5   4   5   6   5   4
+   
+   			 e		d		u		c		a		t		i		o		n
+___|_______________________________________
+   | 0   1   2   3   4   5   6   7   8   9
+e  | 1   0   1   2   3   4   5   6   7   8
+l  | 2   1   2   3   4   5   6   7   8   9
+e  | 3   2   3   4   5   6   7   8   9  10
+m  | 4   3   4   5   6   7   8   9  10  11
+e  | 5   4   5   6   7   8   9  10  11  12
+n  | 6   5   6   7   8   9  10  11  12  11
+t  | 7   6   7   8   9  10   9  10  11  12
+a  | 8   7   8   9  10   9  10  11  12  13
+r  | 9   8   9  10  11  10  11  12  13  14
+y  | 10   9  10  11  12  11  12  13  14  15
+
+				p		e		r		l
+__|____________________				   
+  |  0   1   2   3   4
+p |  1   0   1   2   3
+y |  2   1   2   3   4
+t |  3   2   3   4   5
+h |  4   3   4   5   6
+o |  5   4   5   6   7
+n |  6   5   6   7   8
+
+
+Q2: Accuracy of about 66% using only the Levenshtein distance (48% when selecting
+		the first lowest distance)
+
+Q3: As the lexicon size increases, the number of candidates with the lowest
+		Levenshtein distance will increase. Since there is only one intended word,
+		it becomes even harder to predict what the correct target spelling is.
+
+		Thus, as lexicon size increases, accuracy will probably fall.
+
+Q4: 
+  a) 87.3% (It can actually be a little higher if I randomize the candidate 
+		picked in case of ties in my heuristics, but the mean is (probably) lower, so
+		I don't)
+
+	b) Improvements made to cost:
+
+		i. Deletion cost made marginally higher (1 -> 1.1)
+ 
+		The reasoning behind this was that while speaking, people are less likely
+		to make sounds that they don't intend to. Even while typing, people are
+		more likely to note and remove stray characters in a spelling mistake
+
+
+		ii. Introduced transposition operation at substitution cost (Damerau-Levenshtein)
+
+		Looking at the output, it seemed the best choice could be made if letter pairs
+		could somehow be flipped. This makes particular sense for typographical errors.
+		Some googling revealed that Damerau had already worked on it. I used pseudocode
+		available on wikipedia
+
+		iii. Reduced transposition cost to 1 (= insertion cost)
+
+		This further improved the accuracy of my spell checker. I'm not certain, but
+		maybe this indicates that a decent proportion of misspellings in the file were 
+		typographical?
+
+		iv. Refined/Revised/Settled on an implementation of the American Soundex
+
+		Essentially an American pronunciation implementation of the soundex 
+		developed and patented by Russel and King in 1918.
+		This actually is itself a set of 4 heuristics which can be found at 
+		http://en.wikipedia.org/wiki/Soundex. I wrote the for these heuristics to
+		the best of my understanding.
+
+		The soundex allows me to break ties with a bit more of a phonological basis
+		Before the soundex, I had many unstructured, inferred rules and constraints
+		on costs that became defunct once the soundex was implemented 
+
+	Things that didn't work:
+		v. Insertion cost made marginally lower (1-> 0.9)
+
+		I expected that since people don't enunciate clearly, or type lazy, so that
+		would create spelling habits where omissions were common. So, it made sense
+		to lower the insertion cost.
+		Alone, this doesn't seem to be such a bad idea. However, it reduces my 
+		accuracy on this lexicon by .2% with the other heuristics in play. maybe
+		(i) already accounts for insertion being effectively cheaper.
+
+		vi. Confusion Matrix for Spelling Errors
+		Source: Kernighan et al, 1990, A Spelling Correction Program Based on a Noisy
+		Channel Model
+
+		I took hints from their confusion matrix to see what kind of insertions,
+		deletions and substitutions I should make cheaper (example e in place of a,
+		o in place of u)
+
+		These rules worked very well for vowels, and were consistent with the low
+		cost of operations on them indicated by the Phonological Features' Chart.
+
+		However, I did not like using this for a couple of reasons:
+
+		1. I didn't like not having a good structure for changing costs - hardcoding
+		conditions that changed the cost of my operations by small amounts is not
+		fun. 
+		2. Hard to measure effects on our lexicon after a certain point - a new
+		condition would break almost as many things as it would fix
+
+		3. The matrixes are huge. There's one 26X26 matrix per operation.
+
+		So, I researched online for options to do things in a more structured way that
+		a. I could understand
+		b. Did effectively the same thing as adding conditions to alter the costs
+			in a neater way
+
+		Since I don't understand Markov Chains, was not sure constructing proper
+		phonologial trees was something I could do quickly enough, and didn't 
+		want to undermine the essense of the Levenshtein algorithm, I settled on
+		soundex. The soundex effectively breaks ties by (to some extent) applying
+		general principles - the easy tradeability of vowels, and the importance
+		of certain consonants.
+
+
+		vii. Tried to syllabify misspelt words, and see if the target changed the 
+		number of syllables to break ties.
+
+		Not too sure wether this failed because it wasn't a good guiding heuristic,
+		or my algorithm was inadequate (for eg, was uncertain how to break words into 
+		phonemes, so I only took a small library of them)
+
+
+ c) Adding transpostion cost along with reducing it's cost to 1 (same as insertion)
+ 		added about a 10% improvement. As noted above, I think it may be because our
+ 		misspelling had a lot of typographical mistakes
+
+ 		Increasing cost of deletion increased the accuracy by another 5% or so.
+ 		I assume it is because correcting isspelt words involve insertions more than
+ 		deletions - people don't make "extra" sounds when they get a word wrong. More
+ 		often, they don't enunciate enough (which reflects in their spelling, perhaps)
+
+
+ 		Adding the soundex to break ties (4 heuristics) increased accuracy by another
+ 		5 - 15%, depending on whether one selects the first or last match. The most
+ 		useful aspect of the soundex, I think, is that it gives low weight to vowels.
