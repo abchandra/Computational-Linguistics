@@ -42,17 +42,19 @@ Q4)	Extra Credit :
 	more often than not, at least for our test data.
 
 	Heuristic 1:
-	for a CCC onset, the first C must be [S], the next in [P,T,K] and the last 
-	in [W,J,R,L]. Moreover, if the third C is W, the the first two CC must 
-	be [S,K]. Source:
-	http://clas.mq.edu.au/speech/phonetics/phonology/syllable/syll_phonotactic.html
+	for a CCC onset, the first C must be [S], the next in [P,T,K] and the 
+	last in [W,J,R,L]. Moreover, if the third C is W, the the first two CC 
+	must be [S,K]. Source:
+	http://clas.mq.edu.au/speech/phonetics/phonology/syllable/
+	syll_phonotactic.html
 
 	Heuristic 2:
-	for certain nuclei (IH,AH,EH etc) that are followed by an [S], put [S] in
-	the coda of the same syllable
+	for certain nuclei (IH,AH,EH etc) that are followed by an [S], put [S] 
+	inthe coda of the same syllable
 
 	Heuristic 3:
-	for certain nuclei (same as above) that are followed by [K,T,CH] followed by [S], put them all in the coda of the same syllable.
+	for certain nuclei (same as above) that are followed by [K,T,CH] 
+	followed by [S], put them all in the coda of the same syllable.
 
 	Heuristic 4:
 	for the "-ly" suffix, [LIY], put them in their own syllable 
